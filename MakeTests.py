@@ -13,7 +13,7 @@ def main():
 	parser.add_argument("-i", "--interactive", help="Interactive answers.", action="store_true")
 	parser.add_argument("-a", "--all", help="Create a PDF with all questions with a specific ID. Arg.: <id>.", type=str)
 	parser.add_argument("-q", "--question", help="View results of specific question. Arg.: <group>:<question>:<args_id>")
-	parser.add_argument("-d", "--debug", help="View results of algorithmn of a specific question. Arg.: <group>:<question>:<args_id>")
+	parser.add_argument("-d", "--debug", help="View results of algorithmn of a specific question. Arg.: <group>:<question>:<arg1>[:<arg2>[:...]]")
 	parser.add_argument("-r", "--replaces", help="Set a replace string for .tex file. Arg.: <key>=<value> [<key>=<value> [...]]", type=str, action="append", nargs='+')
 	parser.add_argument("--create", help="Create a dummy repository and config file.", action="store_true")
 
@@ -70,9 +70,11 @@ def main():
 		# --DEBUG
 		if args.debug != None:
 			try:
-				g, q, i = args.debug.split(':')
+				a = args.debug.split(':')
+				g, q = a[0], a[1]
+				i = a[2:] if len(a) > 3 else a[2]
 			except Exception as e:
-				raise Exception("Argument error. Usage: --debug <group>:<question>:<id>")
+				raise Exception("Argument error. Usage: --debug <group>:<question>:<arg1>[:<arg2>[:...]]")
 			if not g in questions:
 				raise Exception("There is no group '{}'.".format(g))
 			elif not q in questions[g]:
@@ -80,7 +82,7 @@ def main():
 			elif not "algorithm" in dir(questions[g][q]):
 				raise Exception("There is not 'algorithm' method on question '{}:{}'.".format(g,q))
 			if args.verbose:
-				print("The result of algorithmn '{}' from group '{}' with id '{}' is:".format(q, g, i))
+				print("The result of algorithmn '{}' from group '{}' with args '{}' is:".format(q, g, i))
 
 			from timeit import default_timer as timer
 			start = timer()
@@ -378,7 +380,7 @@ def algorithm(n):
 
 # Return the answer for a specific ID.
 def answer(ID, debug = False):
-	return str(algorithm(makeVar(ID))) + (" [ID = {}]".format(makeVar(ID)) if debug else "")
+	return str(algorithm(makeVar(ID))) + ((" [ID = {}]".format(makeVar(ID))) if debug else "")
 	
 # Make a question using LaTeX
 def question(ID, answer_area = False):
