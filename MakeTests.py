@@ -135,13 +135,19 @@ def main():
 
 		# All questions PDF
 		if args.all:
+			if args.verbose > 0:
+				print("Build pdf with all questions and id = {}".format(args.all))
 			replaces['%ID%']     = args.all
 			all_tex  = doReplaces(data['tex']['preamble'])
 			all_tex += doReplaces(data['tex']['all']['header'])
 			
 			c = 0
 			for g in questions:
+				if args.verbose > 2:
+					print("  Adding group \"{}\":".format(g))
 				for q in questions[g]:
+					if args.verbose > 2:
+						print("    Adding question \"{}\"...".format(q))
 					c += 1
 					replaces['%COUNT%']  = str(c)
 					replaces['%GROUP%']  = g.replace("_", "\\_")
