@@ -381,7 +381,7 @@ def makeVar(ID):
 
 # Algorithm requested (template).
 def algorithm(n):
-	return n[0] ** n[1]
+	return int(n[0]) ** int(n[1])
 
 # Return the answer for a specific ID.
 def answer(ID, debug = False):
