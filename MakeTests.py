@@ -377,27 +377,26 @@ def createDummy():
 def makeVar(ID):
 	import random
 	random.seed(int(ID))
-	return random.randrange(100,1000,10)
+	return [random.randrange(100,1000,10), random.randrange(2,5,1)]
 
 # Algorithm requested (template).
 def algorithm(n):
-	n = int(n)
-	return n ** 2
+	return n[0] ** n[1]
 
 # Return the answer for a specific ID.
 def answer(ID, debug = False):
 	return str(algorithm(makeVar(ID))) + ((" [ID = {}]".format(makeVar(ID))) if debug else "")
-	
+
 # Make a question using LaTeX
 def question(ID, answer_area = False):
 	def verify(x):
-		return '''{\n\\color{gray}\\textit{(\\textbf{Verify:} If the value was ''' + str(x) + ''', the answer should be ''' + str(algorithm(x)) + ''')}}'''
+		return '''{\n\\color{gray}\\textit{(\\textbf{Verify:} If the value was $''' + str(x[0]) + '''^''' + str(x[1]) + '''$, the answer should be ''' + str(algorithm(x)) + ''')}}'''
 	area = '''\n\n\\begin{tabularx}{\\textwidth}{|X|}\\hline \\\\ \\\\ \\hline\\end{tabularx}\n'''
 	var = makeVar(ID)
 
-	quest = "How much is the equation $" + str(var) + "^2$?"
+	quest = "How much is the equation $" + str(var[0]) + "^" + str(var[1]) + "$?"
 
-	return quest + verify(1100) + (area if answer_area else "")
+	return quest + verify([99, 6]) + (area if answer_area else "")
 """
 
 	config_content = """
