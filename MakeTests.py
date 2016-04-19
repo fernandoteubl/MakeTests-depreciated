@@ -392,7 +392,8 @@ def question(ID, answer_area = False):
 	area = '''\n\n\\begin{tabularx}{\\textwidth}{|X|}\\hline \\\\ \\\\ \\hline\\end{tabularx}\n'''
 	var = makeVar(ID)
 
-	quest = "How much is the equation $" + str(var[0]) + "^" + str(var[1]) + "$?"
+	quest = '''How much is the equation ${0}^{{{1}}}$?
+'''.format(var[0],var[1])
 
 	return quest + verify([99, 6]) + (area if answer_area else "")
 """
