@@ -425,7 +425,7 @@ def question(ID, answer_area = False):
 			"img"
 		],
 		"preamble": [
-			"\\documentclass[oneside,a4paper,12pt]{article}",
+			"\\documentclass[twoside,a4paper,12pt]{article}",
 			"\\usepackage[english,brazilian]{babel}",
 			"\\usepackage[utf8]{inputenc}",
 			"\\usepackage[T1]{fontenc}",
@@ -484,7 +484,7 @@ def question(ID, answer_area = False):
 				""
 			],
 			"footer": [
-				"\\pagebreak{}"
+				"\\cleardoublepage{}"
 			]
 		},
 		"template":{
