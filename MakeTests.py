@@ -383,7 +383,7 @@ def algorithm(n, debug = False):
 
 # Return the answer for a specific ID.
 def answer(ID, debug = False):
-	return str(algorithm(makeVar(ID)), debug = debug) + ((" [ID = {}, Var = {}]".format(ID, makeVar(ID))) if debug else "")
+	return str(algorithm(makeVar(ID), debug = debug)) + ((" [ID = {}, Var = {}]".format(ID, makeVar(ID))) if debug else "")
 
 # Make a question using LaTeX
 def question(ID, answer_area = False):
