@@ -60,7 +60,7 @@ def main():
 				raise Exception("There is not 'answer' method on question '{}:{}'.".format(g,q))
 			if args.verbose:
 				print("The answer of question '{}' from group '{}' with id '{}' is:".format(q, g, i))
-			print(questions[g][q].answer(i, debug=True))
+			print(questions[g][q].answer(i,  debug = (True if args.verbose > 0 else False)))
 			return
 
 		# --DEBUG
