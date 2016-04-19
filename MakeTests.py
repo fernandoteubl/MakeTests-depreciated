@@ -173,11 +173,14 @@ def main():
 		f = open(data['input']['students'], 'r')
 		students = []
 		for s in f.readlines():
-			s = s.replace(' ', '\t')
-			sp   = s.split()
-			id   = sp[0]
-			name = " ".join(sp[1:])
-			students.append([id, name])
+			try:
+				s = s.replace(' ', '\t')
+				sp   = s.split()
+				id   = sp[0]
+				name = " ".join(sp[1:])
+				students.append([id, name])
+			except IndexError:
+				continue
 		f.close()
 
 		if args.verbose:
