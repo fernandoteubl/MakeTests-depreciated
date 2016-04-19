@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# import sys  
-# reload(sys)  
-# sys.setdefaultencoding('utf8')
-
 def main():
 	import argparse
 	parser = argparse.ArgumentParser()
@@ -13,7 +9,7 @@ def main():
 	parser.add_argument("-i", "--interactive", help="Interactive answers.", action="store_true")
 	parser.add_argument("-a", "--all", help="Create a PDF with all questions with a specific ID. Arg.: <id>.", type=str)
 	parser.add_argument("-q", "--question", help="View results of specific question. Arg.: <group>:<question>:<args_id>")
-	parser.add_argument("-d", "--debug", help="View results of algorithmn of a specific question. Arg.: <group>:<question>:<arg1>[:<arg2>[:...]]")
+	parser.add_argument("-d", "--debug", help="View results of algorithm of a specific question. Arg.: <group>:<question>:<arg1>[:<arg2>[:...]]")
 	parser.add_argument("-r", "--replaces", help="Set a replace string for .tex file. Arg.: <key>=<value> [<key>=<value> [...]]", type=str, action="append", nargs='+')
 	parser.add_argument("--create", help="Create a dummy repository and config file.", action="store_true")
 
@@ -60,7 +56,7 @@ def main():
 				raise Exception("There is no group '{}'.".format(g))
 			elif not q in questions[g]:
 				raise Exception("There is no question '{}' in group '{}'.".format(q, g))
-			elif not "algorithm" in dir(questions[g][q]):
+			elif not "answer" in dir(questions[g][q]):
 				raise Exception("There is not 'answer' method on question '{}:{}'.".format(g,q))
 			if args.verbose:
 				print("The answer of question '{}' from group '{}' with id '{}' is:".format(q, g, i))
@@ -82,11 +78,11 @@ def main():
 			elif not "algorithm" in dir(questions[g][q]):
 				raise Exception("There is not 'algorithm' method on question '{}:{}'.".format(g,q))
 			if args.verbose:
-				print("The result of algorithmn '{}' from group '{}' with args '{}' is:".format(q, g, i))
+				print("The result of algorithm '{}' from group '{}' with args '{}' is:".format(q, g, i))
 
 			from timeit import default_timer as timer
 			start = timer()
-			r = questions[g][q].algorithm(i)
+			r = questions[g][q].algorithm(i, debug = (True if args.verbose > 0 else False))
 			end = timer()
 			print(r)
 			if args.verbose:
@@ -380,12 +376,14 @@ def makeVar(ID):
 	return [random.randrange(100,1000,10), random.randrange(2,5,1)]
 
 # Algorithm requested (template).
-def algorithm(n):
+def algorithm(n, debug = False):
+	if debug:
+		print("n[0] is {} and n[1] is {}".format(n[0],n[1]))
 	return int(n[0]) ** int(n[1])
 
 # Return the answer for a specific ID.
 def answer(ID, debug = False):
-	return str(algorithm(makeVar(ID))) + ((" [ID = {}]".format(makeVar(ID))) if debug else "")
+	return str(algorithm(makeVar(ID)), debug = debug) + ((" [ID = {}, Var = {}]".format(ID, makeVar(ID))) if debug else "")
 
 # Make a question using LaTeX
 def question(ID, answer_area = False):
