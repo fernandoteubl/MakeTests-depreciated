@@ -1,5 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+import sys
+req_version = (3,0)
+cur_version = sys.version_info
+if cur_version < req_version:
+	sys.exit("Your Python interpreter is too old ({}.{}). Please, upgrade to Python {}.{}.".format(cur_version[0],cur_version[1],req_version[0],req_version[1]))
+
+def cmd_exists(cmd):
+	import subprocess
+	return subprocess.call("type " + cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) == 0
+if not cmd_exists("pdflatex"):
+	sys.exit("Please, install pdflatex (sudo apt-get install texlive-full)")
+
 
 def main():
 	import argparse
