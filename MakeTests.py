@@ -371,7 +371,7 @@ def tex2pdf(tex_str, output, includes = []):
 	return proc.returncode == 0, proc_out
 
 def createDummy():
-	question_content = """
+	question_power = """
 # Generate a specific variable for each ID
 def makeVar(ID):
 	import random
@@ -381,7 +381,7 @@ def makeVar(ID):
 # Algorithm requested (template).
 def algorithm(n, debug = False):
 	if debug:
-		print("n[0] is {} and n[1] is {}".format(n[0],n[1]))
+		print("n[0] is {0} and n[1] is {1}".format(n[0],n[1]))
 	return int(n[0]) ** int(n[1])
 
 # Return the answer for a specific ID.
@@ -395,11 +395,48 @@ def question(ID, answer_area = False):
 	area = '''\n\n\\begin{tabularx}{\\textwidth}{|X|}\\hline \\\\ \\\\ \\hline\\end{tabularx}\n'''
 	var = makeVar(ID)
 
-	quest = '''How much is the equation ${0}^{{{1}}}$?
-'''.format(var[0],var[1])
+	quest = '''How much is the equation ${pot[0]}^{{{pot[1]}}}$?
+'''.format(pot=var)
 
 	return quest + verify([99, 6]) + (area if answer_area else "")
 """
+
+	question_multiple = """
+# Generate a specific variable for each ID
+def makeVar(ID):
+	import random
+	random.seed(int(ID))
+	q = [["One", False],
+		 ["Two", False],
+		 ["Three", False],
+		 ["Four", False],
+		 ["Five", True]]
+	random.shuffle(q)
+	return q
+
+# Algorithm requested (template).
+def algorithm(n, debug = False):
+	if debug:
+		print("Questions: {}".format(n))
+	return chr(ord('A')+[n.index(c) for c in n if c[1] == True][0])
+
+# Return the answer for a specific ID.
+def answer(ID, debug = False):
+	return str(algorithm(makeVar(ID), debug = debug)) + ((" [ID = {}, Var = {}]".format(ID, makeVar(ID))) if debug else "")
+
+# Make a question using LaTeX
+def question(ID, answer_area = False):
+	var = makeVar(ID)
+	quest = '''What is the bigger number:
+	
+	'''
+	for i in range(len(var)):
+		quest += '''{l}) {q} 
+
+		'''.format(l=chr(ord('A')+i), q=var[i][0])
+	return quest
+"""
+
 
 	config_content = """
 {
@@ -412,6 +449,7 @@ def question(ID, answer_area = False):
 		"template":"Template.pdf",
 		"all":"AllQuestions.pdf"},
 	"questions":[
+		{"group":"Easy", "prefix":"Weight 1"},
 		{"group":"Easy", "prefix":"Weight 1"}
 	],
 	"tex":{
@@ -582,7 +620,9 @@ def question(ID, answer_area = False):
 	os.makedirs("Questions")
 	os.makedirs("Questions/Easy")
 	with open("Questions/Easy/Power.py", "w") as f:
-		f.write(question_content.replace("\\", "\\\\"))
+		f.write(question_power.replace("\\", "\\\\"))
+	with open("Questions/Easy/Multiple.py", "w") as f:
+		f.write(question_multiple.replace("\\", "\\\\"))
 	with open("students.txt", "w") as f:
 		import random, string
 		for i in range(10):
