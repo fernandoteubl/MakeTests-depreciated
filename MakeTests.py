@@ -28,6 +28,14 @@ def main():
 
 	args = parser.parse_args()
 
+	def print_tex(t):
+		line = 1
+		for ls in t:
+			l = ls.split('\n')
+			for s in l:
+				print("{:5d}: {}".format(line, s))
+				line += 1
+
 	try:
 		if args.create:
 			createDummy()
@@ -173,8 +181,7 @@ def main():
 			
 			if args.verbose > 2:
 				print ("========== LaTeX generated All BEGIN ========")
-				for l in all_tex:
-					print(l)
+				print_tex(all_tex)
 				print ("========== LaTeX generated All END ==========")
 			
 			ret, out = tex2pdf(all_tex, data['output']['all'], data['tex']['includes'])
@@ -226,8 +233,7 @@ def main():
 
 		if args.verbose > 2:
 			print ("========== LaTeX generated Tests BEGIN ========")
-			for l in tests_tex:
-				print(l)
+			print_tex(tests_tex)
 			print ("========== LaTeX generated Tests END ==========")
 
 		ret, out = tex2pdf(tests_tex, data['output']['tests'], data['tex']['includes'])
@@ -266,8 +272,7 @@ def main():
 
 		if args.verbose > 2:
 			print ("========== LaTeX generated Template BEGIN ========")
-			for l in template_tex:
-				print(l)
+			print_tex(template_tex)
 			print ("========== LaTeX generated Template END ==========")
 
 		ret, out = tex2pdf(template_tex, data['output']['template'], data['tex']['includes'])
