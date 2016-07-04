@@ -493,6 +493,7 @@ def question(ID, answer_area = False):
 			"\\usepackage{amsmath}",
 			"\\usepackage{graphicx}",
 			"\\usepackage{enumitem}",
+			"\\usepackage{tabulary}",
 			"\\newcommand{\\myemph}[1]{\\textbf{#1}}",
 			"\\renewcommand{\\emph}[1]{\\myemph{#1}}",
 			"\\begin{document}",
@@ -553,7 +554,7 @@ def question(ID, answer_area = False):
 				""
 			],
 			"student": [
-				"\\begin{tabularx}{\\textwidth}{|p{0cm}*{%TOTAL%}{|X}|}",
+				"\\begin{tabulary}{\\textwidth}{|p{0cm}*{%TOTAL%}{|L}|}",
 				"\\hline",
 				"\\multirow{2}{*}{} & \\multicolumn{%TOTAL%}{|c|}{\\textbf{%NAME% (%ID%)}} \\\\",
 				"\\hline"
@@ -564,7 +565,7 @@ def question(ID, answer_area = False):
 			"next": [
 				" \\\\ ",
 				"\\hline",
-				"\\end{tabularx}",
+				"\\end{tabulary}",
 				""
 			],
 			"footer": [
