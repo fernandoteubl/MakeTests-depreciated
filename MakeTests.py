@@ -246,7 +246,7 @@ def main():
 		# Print template PDF
 		template_tex = []		
 		template_tex += data['tex']['preamble']
-		template_tex += data['tex']['template']['header']
+		template_tex += doReplaces(data['tex']['template']['header'])
 		for id, name in students:
 			if args.verbose > 1:
 				print("Generate template to {} ({})".format(name, id))
