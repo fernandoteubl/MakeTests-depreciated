@@ -28,6 +28,12 @@ def main():
 
 	args = parser.parse_args()
 
+	def salt(digits=8):
+		import hashlib
+		if "salt" in data.keys() and data["salt"] != "":
+			return str(int(hashlib.sha256(data["salt"].encode('utf-8')).hexdigest(), 16) % 10**digits)
+		return ""
+
 	def print_tex(t):
 		line = 1
 		for ls in t:
@@ -81,7 +87,7 @@ def main():
 				raise Exception("There is not 'answer' method on question '{}:{}'.".format(g,q))
 			if args.verbose:
 				print("The answer of question '{}' from group '{}' with id '{}' is:".format(q, g, i))
-			print(questions[g][q].answer(i,  debug = (True if args.verbose > 0 else False)))
+			print(questions[g][q].answer(i + salt(),  debug = (True if args.verbose > 0 else False)))
 			return
 
 		# --DEBUG
@@ -116,8 +122,8 @@ def main():
 			while True:
 				try:
 					ID = int(input("Enter an ID (press Ctrl+C to exit): "))					
-					for q in loadQuestions(data['questions'], questions, ID):
-						print("  {:>16}.{:<16} = {:<32} ({})".format(q['group'], q['filename'], q['module'].answer(ID, debug=False), q['prefix']))
+					for q in loadQuestions(data['questions'], questions, ID+salt()):
+						print("  {:>16}.{:<16} = {:<32} ({})".format(q['group'], q['filename'], q['module'].answer(ID+salt(), debug=False), q['prefix']))
 				except ValueError:
 					print("Invalid ID!")
 				except KeyboardInterrupt:
@@ -219,13 +225,13 @@ def main():
 			tests_tex += doReplaces(data['tex']['test']['header'])
 			
 			c = 0
-			for q in loadQuestions(data['questions'], questions, id):
+			for q in loadQuestions(data['questions'], questions, id+salt()):
 				c += 1
 				replaces['%COUNT%'] = str(c)
 				replaces['%PREFIX%'] = q['prefix']
 
 				tests_tex += doReplaces(data['tex']['test']['before'])
-				tests_tex.append(q['module'].question(id, answer_area = True))
+				tests_tex.append(q['module'].question(id+salt(), answer_area = True))
 				tests_tex += doReplaces(data['tex']['test']['after'])
 
 			tests_tex += doReplaces(data['tex']['test']['footer'])
@@ -257,11 +263,11 @@ def main():
 			template_tex += doReplaces(data['tex']['template']['student'])
 
 			c = 0
-			for q in loadQuestions(data['questions'], questions, id):
+			for q in loadQuestions(data['questions'], questions, id+salt()):
 				c += 1
 				replaces['%COUNT%']  = str(c)
 				replaces['%PREFIX%'] = q['prefix']
-				replaces['%ANSWER%'] = str(q['module'].answer(id))
+				replaces['%ANSWER%'] = str(q['module'].answer(id+salt()))
 
 				template_tex += doReplaces(data['tex']['template']['answer'])
 
@@ -459,6 +465,7 @@ def question(ID, answer_area = False):
 	config_content = """
 {
 	"repository":"Questions",
+	"salt":"ChangeThisTextToMakeANewRandomSeed",
 	"input":{
 		"students":"students.txt"
 	},
