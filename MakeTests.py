@@ -384,7 +384,7 @@ def tex2pdf(tex_str, output, includes = []):
 			f.write('\n')
 
 	proc = subprocess.Popen(shlex.split("pdflatex -halt-on-error -file-line-error -output-format=pdf {}".format(filename + '.tex')), stdout=subprocess.PIPE, stderr=sys.stdout.buffer)
-	proc_out = proc.communicate()[0].decode('utf-8')
+	proc_out = proc.communicate()[0]
 
 	if os.path.isfile(filename + '.pdf'):
 		shutil.move(filename + '.pdf', full_output)
